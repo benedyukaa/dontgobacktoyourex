@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Почему не стоит возвращаться к бывшему | Новая Глава</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: #4a5568;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Main content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero section */
+        .hero {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Content cards */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card p {
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+
+        /* Articles page */
+        .article-list {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .article-preview {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .article-preview:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-preview h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .article-preview .meta {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Tips page */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+            border-image: linear-gradient(135deg, #667eea, #764ba2) 1;
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateX(5px);
+        }
+
+        .tip-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact form */
+        .contact-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(45, 55, 72, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Новая Глава</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="showPage('home')">Главная</a></li>
+                <li><a href="#" onclick="showPage('articles')">Статьи</a></li>
+                <li><a href="#" onclick="showPage('tips')">Советы</a></li>
+                <li><a href="#" onclick="showPage('contact')">Контакты</a></li>
+            </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Главная страница -->
+        <div id="home" class="page active">
+            <section class="hero">
+                <h1>Почему не стоит возвращаться к бывшему</h1>
+                <p>Откройте новую главу своей жизни. Узнайте, почему движение вперёд — лучшее решение для вашего счастья и личностного роста.</p>
+                <button class="cta-button" onclick="showPage('articles')">Читать статьи</button>
+            </section>
+
+            <div class="content-grid">
+                <div class="card">
+                    <h3>🔄 Порочный круг</h3>
+                    <p>Возвращение к бывшему партнёру часто означает повторение тех же проблем, которые привели к расставанию. Люди редко кардинально меняются за короткое время.</p>
+                    <p>Исследования показывают, что 90% отношений, которые возобновляются после расставания, снова заканчиваются в течение двух лет.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🚫 Потеря самоуважения</h3>
+                    <p>Возвращение к человеку, который причинил вам боль, может подорвать вашу самооценку и уверенность в себе.</p>
+                    <p>Это посылает сигнал как вам, так и вашему партнёру, что вы готовы мириться с неподходящим обращением.</p>
+                </div>
+
+                <div class="card">
+                    <h3>⏰ Упущенные возможности</h3>
+                    <p>Зацикливаясь на прошлом, вы упускаете шанс встретить кого-то, кто действительно подходит вам и ценит то, кто вы есть.</p>
+                    <p>Время, потраченное на попытки "починить" старые отношения, можно использовать для личностного роста и новых знакомств.</p>
+                </div>
+
+                <div class="card">
+                    <h3>💔 Эмоциональная нестабильность</h3>
+                    <p>Постоянные расставания и возвращения создают эмоциональные качели, которые истощают психику и мешают стабильности.</p>
+                    <p>Такие отношения часто характеризуются драмой и непредсказуемостью, что негативно влияет на ментальное здоровье.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌱 Препятствие для роста</h3>
+                    <p>Расставания — это возможность для самоанализа и личностного развития. Возвращение к бывшему лишает вас этого важного опыта.</p>
+                    <p>Только проходя через трудности и преодолевая их, мы становимся сильнее и мудрее.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔮 Светлое будущее</h3>
+                    <p>Каждое окончание — это новое начало. Расставание открывает дорогу к отношениям, которые действительно сделают вас счастливыми.</p>
+                    <p>Доверьтесь процессу жизни и дайте себе шанс обрести настоящую любовь и понимание.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница статей -->
+        <div id="articles" class="page">
+            <h2 class="section-title">Статьи и исследования</h2>
+            <div class="article-list">
+                <article class="article-preview">
+                    <h2>Психология расставаний: Почему мы цепляемся за прошлое</h2>
+                    <div class="meta">15 минут чтения • Психология отношений</div>
+                    <p>Разбираем психологические механизмы, которые заставляют нас возвращаться к бывшим партнёрам. Страх одиночества, низкая самооценка, привычка и ностальгия — основные причины, по которым люди не могут отпустить прошлое.</p>
+                    <p>В статье рассматриваются результаты исследований университета Канзаса, которые показывают, что люди склонны идеализировать прошлые отношения и забывать о проблемах, которые к ним привели...</p>
+                </article>
+
+                <article class="article-preview">
+                    <h2>Статистика повторных отношений: Цифры говорят сами за себя</h2>
+                    <div class="meta">8 минут чтения • Исследования</div>
+                    <p>Анализ данных более чем 1000 пар показал удручающую статистику: только 15% возобновлённых отношений приводят к долгосрочному счастью. Остальные 85% снова распадаются, часто причиняя ещё больше боли.</p>
+                    <p>Особенно интересны результаты longitudinal study, которое следило за парами в течение 5 лет после возобновления отношений...</p>
+                </article>
+
+                <article class="article-preview">
+                    <h2>Токсичные паттерны: Как распознать нездоровые отношения</h2>
+                    <div class="meta">12 минут чтения • Практическая психология</div>
+                    <p>Газлайтинг, эмоциональная манипуляция, созависимость — эти паттерны часто повторяются в возобновлённых отношениях. Учимся распознавать красные флаги и защищать своё эмоциональное здоровье.</p>
+                    <p>Реальные истории людей, которые смогли разорвать токсичный цикл и найти здоровые отношения...</p>
+                </article>
+
+                <article class="article-preview">
+                    <h2>Биология расставаний: Что происходит с мозгом</h2>
+                    <div class="meta">10 минут чтения • Нейронаука</div>
+                    <p>МРТ-исследования показывают, что расставания активируют те же области мозга, что и физическая боль. Понимание нейробиологических процессов помогает легче пережить разрыв отношений.</p>
+                    <p>Как формируется привыкание к партнёру на уровне дофаминовых рецепторов и почему "ломка" после расставания — это нормальная реакция организма...</p>
+                </article>
+            </div>
+        </div>
+
+        <!-- Страница советов -->
+        <div id="tips" class="page">
+            <h2 class="section-title">Практические советы</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-number">1</div>
+                    <h3>Правило "No Contact"</h3>
+                    <p>Полностью прекратите общение с бывшим партнёром минимум на 3 месяца. Удалите из соцсетей, не отвечайте на сообщения. Это время нужно для эмоционального восстановления и обретения ясности.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">2</div>
+                    <h3>Ведите дневник эмоций</h3>
+                    <p>Записывайте свои чувства и мысли каждый день. Это поможет отследить прогресс в исцелении и заметить паттерны, которые ведут к желанию вернуться к бывшему.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">3</div>
+                    <h3>Составьте список проблем</h3>
+                    <p>Честно запишите все проблемы, которые были в отношениях. Перечитывайте этот список, когда ностальгия заставляет забыть о недостатках партнёра.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">4</div>
+                    <h3>Инвестируйте в себя</h3>
+                    <p>Направьте энергию на саморазвитие: новое хобби, спорт, образование, карьера. Каждый день делайте что-то для своего роста и благополучия.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">5</div>
+                    <h3>Расширьте социальный круг</h3>
+                    <p>Знакомьтесь с новыми людьми, укрепляйте дружеские связи. Это поможет понять, что мир полон интересных людей, и вы не ограничены одним человеком.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">6</div>
+                    <h3>Работайте с психологом</h3>
+                    <p>Профессиональная помощь особенно важна, если вы чувствуете, что застряли в токсичных паттернах или не можете самостоятельно справиться с эмоциями.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">7</div>
+                    <h3>Создайте новые традиции</h3>
+                    <p>Замените старые привычки и места, связанные с бывшим, на новые. Это поможет создать свежие ассоциации и двигаться вперёд.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-number">8</div>
+                    <h3>Практикуйте благодарность</h3>
+                    <p>Каждый день записывайте 3 вещи, за которые вы благодарны. Это поможет сфокусироваться на позитивных аспектах жизни и повысить общее настроение.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница контактов -->
+        <div id="contact" class="page">
+            <h2 class="section-title">Свяжитесь с нами</h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Ваше имя</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Тема сообщения</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Сообщение</label>
+                    <textarea id="message" name="message" required placeholder="Поделитесь своей историей или задайте вопрос..."></textarea>
+                </div>
+                
+                <button type="submit" class="cta-button">Отправить сообщение</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 3rem; color: white;">
+                <p>Если вы переживаете трудный период после расставания, помните: вы не одиноки.</p>
+                <p>Каждый день без токсичных отношений — это шаг к более счастливой жизни.</p>
+                <br>
+                <p><strong>Горячая линия психологической помощи: 8-800-2000-122</strong></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Новая Глава. Все права защищены. Создано для тех, кто выбирает счастливое будущее.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.style.color = '#4a5568';
+            });
+            
+            // Close mobile menu if open
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenu').addEventListener('click', function() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        });
+
+        // Form submission
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Спасибо за ваше сообщение! Мы обязательно свяжемся с вами.');
+            this.reset();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Add loading animation to cards
+        function observeCards() {
+            const cards = document.querySelectorAll('.card, .tip-card, .article-preview');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        }
+
+        // Initialize animations when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            observeCards();
+        });
+    </script>
+</body>
+</html>
